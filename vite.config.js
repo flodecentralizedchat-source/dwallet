@@ -5,35 +5,13 @@ export default defineConfig({
   plugins: [react()],
   define: {
     global: 'globalThis',
-    'process.env': {},
-  },
-  resolve: {
-    alias: {
-      // Polyfill Node built-ins that WalletConnect needs in the browser
-      stream: 'node:stream',
-      util:   'node:util',
-      buffer: 'node:buffer',
-    },
+    'process.env': '{}',
+    Buffer: ['buffer', 'Buffer'],
   },
   optimizeDeps: {
-    esbuildOptions: {
-      define: {
-        global: 'globalThis',
-      },
-    },
+    include: ['buffer'],
   },
   build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vendor-react':   ['react', 'react-dom'],
-          'vendor-ethers':  ['ethers'],
-          'vendor-scure':   ['@scure/bip39', '@scure/bip32', '@noble/hashes'],
-          'vendor-uniswap': ['@uniswap/v3-sdk', '@uniswap/sdk-core'],
-          'vendor-wc':      ['@walletconnect/web3wallet', '@walletconnect/core', '@walletconnect/utils'],
-        },
-      },
-    },
     chunkSizeWarningLimit: 1500,
   },
 })

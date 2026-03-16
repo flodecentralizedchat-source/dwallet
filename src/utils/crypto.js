@@ -17,14 +17,14 @@ export function deriveWalletFromSeed(seed, index = 0) {
 
   if (!child.privateKey) throw new Error("Failed to derive private key");
 
-  const privateKeyHex = "0x" + Buffer.from(child.privateKey).toString("hex");
+  const privateKeyHex = "0x" + Array.from(child.privateKey).map(b => b.toString(16).padStart(2,"0")).join("");
 
   // Derive Ethereum address: keccak256 of uncompressed public key (drop 0x04 prefix), take last 20 bytes
   const pubKey = child.publicKey; // 33-byte compressed
   // We need uncompressed — @scure/bip32 exposes it via publicExtendedKey, but we can compute address
   // from compressed key hash as ethers does internally
   const addressBytes = keccak_256(pubKey.slice(1)).slice(-20);
-  const rawAddress = "0x" + Buffer.from(addressBytes).toString("hex");
+  const rawAddress = "0x" + Array.from(addressBytes).map(b => b.toString(16).padStart(2,"0")).join("");
   const address = toChecksumAddress(rawAddress);
 
   return { privateKey: privateKeyHex, address };
